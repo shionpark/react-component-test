@@ -12,6 +12,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.90.10",
     "@testing-library/user-event": "^14.6.1",
+    "json-server": "0.17.4",
     "next": "16.0.3",
     "react": "19.2.0",
     "react-dom": "19.2.0",
