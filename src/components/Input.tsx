@@ -1,6 +1,6 @@
 'use client';
 
-import { DeleteIconButton } from '../DeleteButton/DeleteButton';
+import { DeleteIconButton } from './DeleteButton';
 
 interface InputProps {
   id?: string;

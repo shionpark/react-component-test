@@ -1,9 +1,7 @@
-// src/components/LoginForm/index.tsx
-
 'use client';
 
 import { useState } from 'react';
-import { Input } from '../Input/Input';
+import { Input } from './Input';
 
 export const LoginForm = () => {
   const [values, setValues] = useState({

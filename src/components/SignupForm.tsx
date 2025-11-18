@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Input } from '../Input/Input';
+import { Input } from '../Input';
 
 export const SignupForm = () => {
   const [values, setValues] = useState({
