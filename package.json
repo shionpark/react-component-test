@@ -10,6 +10,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.90.10",
     "@testing-library/user-event": "^14.6.1",
     "next": "16.0.3",
     "react": "19.2.0",
