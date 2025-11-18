@@ -1,13 +1,38 @@
 import Home from '@/app/page';
-import { render, screen } from '@testing-library/react';
+import useCounterStore from '@/stores/useCounterStore';
+import { fireEvent, render, screen } from '@testing-library/react';
 
-test('메인 페이지가 제대로 렌더링되는지 테스트', () => {
-  // 1. 메인 페이지 렌더링
-  render(<Home />);
+describe('Home 페이지 테스트', () => {
+  beforeEach(() => {
+    useCounterStore.setState({ count: 0 });
+  });
 
-  // 2. "컴포넌트 테스트 연습하기" 텍스트를 가진 요소를 찾기
-  const element = screen.getByText('컴포넌트 테스트 연습하기');
+  test('메인 페이지가 제대로 렌더링되는지 테스트', () => {
+    render(<Home />);
 
-  // 3. 요소가 화면에 있는지 확인
-  expect(element).toBeInTheDocument();
+    const element = screen.getByText('Count: 0');
+    expect(element).toBeInTheDocument();
+  });
+
+  test('증가 버튼 클릭 시 카운트가 증가하는지 확인', () => {
+    render(<Home />);
+
+    const incrementBtn = screen.getByRole('button', { name: '증가' });
+
+    fireEvent.click(incrementBtn);
+
+    const element = screen.getByText('Count: 1');
+    expect(element).toBeInTheDocument();
+  });
+
+  test('감소 버튼 클릭 시 카운트가 감소하는지 확인', () => {
+    render(<Home />);
+
+    const decrementBtn = screen.getByRole('button', { name: '감소' });
+
+    fireEvent.click(decrementBtn);
+
+    const element = screen.getByText('Count: -1');
+    expect(element).toBeInTheDocument();
+  });
 });
