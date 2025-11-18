@@ -1,33 +1,57 @@
-import Home from '@/app/page';
+import CartPage from '@/app/page';
+import useCounterStore from '@/stores/useCounterStore';
 import { fireEvent, render, screen } from '@testing-library/react';
 
-describe('Home 페이지 테스트', () => {
-  test('메인 페이지가 제대로 렌더링되는지 테스트', () => {
-    render(<Home />);
+describe('CartPage 컴포넌트 테스트', () => {
+  test('로그인하지 않은 상태에서 추가 버튼 클릭 시 경고하는 alert가 호출되는지 확인', () => {
+    render(<CartPage />);
 
-    const element = screen.getByText('Count: 0');
-    expect(element).toBeInTheDocument();
+    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    const plusBtn = screen.getByText('추가');
+    fireEvent.click(plusBtn);
+
+    expect(alertSpy).toHaveBeenCalled();
+
+    alertSpy.mockRestore();
   });
 
-  test('증가 버튼 클릭 시 카운트가 증가하는지 확인', () => {
-    render(<Home />);
+  test('로그인 후 추가 버튼 클릭 시 count 증가되는지 확인', () => {
+    render(<CartPage />);
 
-    const incrementBtn = screen.getByRole('button', { name: '증가' });
+    // const { count } = useCounterStore();
 
-    fireEvent.click(incrementBtn);
+    const loginBtn = screen.getByText('로그인');
+    fireEvent.click(loginBtn);
 
-    const element = screen.getByText('Count: 1');
-    expect(element).toBeInTheDocument();
+    const plusBtn = screen.getByText('추가');
+    fireEvent.click(plusBtn);
+
+    // expect(count).toBe(1);
+    expect(screen.getByText('상품 개수: 1')).toBeInTheDocument();
   });
 
-  test('감소 버튼 클릭 시 카운트가 감소하는지 확인', () => {
-    render(<Home />);
+  test('상품이 0개일 때 제거 버튼 비활성화되는지 확인', () => {
+    render(<CartPage />);
 
-    const decrementBtn = screen.getByRole('button', { name: '감소' });
+    const removeButton = screen.getByRole('button', { name: '제거' });
+    expect(removeButton).toBeDisabled();
+  });
 
-    fireEvent.click(decrementBtn);
+  test('상품 추가(로그인된 상태) 후 제거 시 count 감소', () => {
+    render(<CartPage />);
 
-    const element = screen.getByText('Count: -1');
-    expect(element).toBeInTheDocument();
+    const loginButton = screen.getByRole('button', { name: '로그인' });
+    fireEvent.click(loginButton);
+    expect(screen.getByText('로그인됨: user@example.com')).toBeInTheDocument();
+
+    const addButton = screen.getByRole('button', { name: '추가' });
+    fireEvent.click(addButton);
+    fireEvent.click(addButton);
+
+    const removeButton = screen.getByRole('button', { name: '제거' });
+    fireEvent.click(removeButton);
+
+    expect(screen.getByText('상품 개수: 1')).toBeInTheDocument();
   });
 });
