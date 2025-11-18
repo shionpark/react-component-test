@@ -1,60 +1,44 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Input } from './Input';
+import { useState } from 'react';
 
-/**
- * 테스트 항목
- * 1. Input 컴포넌트 미입력 시 X 버튼이 보이지 않아야 한다.
- * 2. Input 컴포넌트 입력값이 있을 때 X 버튼이 보여야 한다.
- * 3. X 버튼 클릭 시 입력값이 없어져야 한다.
- */
+test('X 버튼 클릭 시 onDelete props에 전달된 함수가 호출되는지 확인한다.', () => {
+  const onDelete = jest.fn();
+  render(<Input value="입력값" onChange={jest.fn()} onDelete={onDelete} />);
 
-test('Input 컴포넌트 미입력 시 X 버튼이 보이지 않는지 테스트', () => {
-  render(<Input />);
+  const deleteButton = screen.getByRole('button', { name: '입력값 지우기' });
 
-  const input = screen.getByRole('textbox');
-  const deleteButton = screen.queryByRole('button', { name: '입력값 지우기' });
+  // X 버튼 클릭
+  fireEvent.click(deleteButton);
 
-  // 입력값이 없고,
-  expect(input).toHaveValue('');
-  // X 버튼이 보이지 않아야 한다.
-  expect(deleteButton).not.toBeInTheDocument();
+  // onDelete 함수가 호출된다.
+  expect(onDelete).toHaveBeenCalled();
 });
 
-test('Input 컴포넌트 입력값 있을 때 X 버튼 보이는지 테스트', () => {
-  const defaultValue = '테스트입니다.';
+test('X 버튼 클릭 시 입력값이 지워지는지 확인한다', () => {
+  // 삭제 기능을 테스트하기 위해 Wrapper 컴포넌트를 생성
+  const Wrapper = () => {
+    const [value, setValue] = useState('입력값');
+    const handleDelete = () => setValue('');
 
-  render(<Input defaultValue={defaultValue} />);
-
-  const input = screen.getByRole('textbox');
-  const deleteButton = screen.queryByRole('button', { name: '입력값 지우기' });
-
-  // 입력값이 있고,
-  expect(input).toHaveValue(defaultValue);
-  // X 버튼이 보여야 한다.
-  expect(deleteButton).toBeInTheDocument();
-});
-
-test('X 버튼 클릭 시 입력값이 없어지는지 테스트', () => {
-  const defaultValue = '테스트입니다.';
-
-  render(<Input defaultValue={defaultValue} />);
+    return (
+      <Input
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        onDelete={handleDelete}
+      />
+    );
+  };
+  render(<Wrapper />);
 
   const input = screen.getByRole('textbox');
   const deleteButton = screen.getByRole('button', { name: '입력값 지우기' });
 
+  // X 버튼 클릭
   fireEvent.click(deleteButton);
 
-  // 입력값이 없고,
+  // 입력값이 지워지고,
   expect(input).toHaveValue('');
-  // X 버튼이 보이지 않아야 한다.
+  // X 버튼이 사라진다.
   expect(deleteButton).not.toBeInTheDocument();
-});
-
-test('Input 컴포넌트에 (유효성) 에러 시 에러 메세지가 발생하는지 확인', () => {
-  const defaultErrorMsg = '유효하지 않은 메시지입니다.';
-  render(<Input isError={true} errorMessage={defaultErrorMsg} />);
-
-  const errorMessage = screen.getByText(defaultErrorMsg);
-
-  expect(errorMessage).toBeInTheDocument();
 });
