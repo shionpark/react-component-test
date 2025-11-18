@@ -1,12 +1,7 @@
 import Home from '@/app/page';
-import useCounterStore from '@/stores/useCounterStore';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 describe('Home 페이지 테스트', () => {
-  beforeEach(() => {
-    useCounterStore.setState({ count: 0 });
-  });
-
   test('메인 페이지가 제대로 렌더링되는지 테스트', () => {
     render(<Home />);
 
