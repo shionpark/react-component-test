@@ -1,3 +1,10 @@
+import { Input } from '@/components/Input/Input';
+
 export default function Home() {
-  return <h1>Home</h1>;
+  return (
+    <h1>
+      컴포넌트 테스트 연습하기
+      <Input />
+    </h1>
+  );
 }
