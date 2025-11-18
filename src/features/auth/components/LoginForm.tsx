@@ -1,7 +1,7 @@
 'use client';
 
+import { Input } from '@/features/common/components/Input';
 import { useState } from 'react';
-import { Input } from './Input';
 
 export const LoginForm = () => {
   const [values, setValues] = useState({
