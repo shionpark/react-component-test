@@ -1,33 +1,30 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import type { Post } from '@/mocks/handlers/posts';
 
 export default function Home() {
-  const [data, setData] = useState<Post[]>([]);
+  const [data, setData] = useState<Post | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await fetch('http://localhost:4000/posts');
-      if (!response.ok) {
-        throw new Error('에러 발생');
-      }
-      const posts = await response.json();
-      setData(posts);
+      const response = await axios.get('http://localhost:4000/posts/1');
+      setData(response.data);
     };
     fetchData();
   }, []);
 
   return (
     <ul>
-      {data.map((item) => (
-        <li key={item.id} className="border p-4">
+      {data && (
+        <li key={data.id} className="border p-4">
           <h3 className="font-bold">
-            {item.id}: {item.title}
+            {data.id}: {data.title}
           </h3>
-          <p>{item.body}</p>
+          <p>{data.body}</p>
         </li>
-      ))}
+      )}
     </ul>
   );
 }
