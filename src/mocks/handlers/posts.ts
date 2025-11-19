@@ -13,4 +13,12 @@ export const postsHandlers = [
       { id: 2, title: '두 번째 게시글', body: '내용 2' },
     ]);
   }),
+  // 상세 데이터 조회
+  http.get('http://localhost:4000/posts/:id', ({ params }) => {
+    return HttpResponse.json({
+      id: Number(params.id),
+      title: '첫 번째 게시글',
+      body: '내용 1',
+    });
+  }),
 ];

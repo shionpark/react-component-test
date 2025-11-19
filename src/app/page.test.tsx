@@ -1,57 +1,13 @@
-import CartPage from '@/app/page';
-import useCounterStore from '@/stores/useCounterStore';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import Home from './page';
 
-describe('CartPage 컴포넌트 테스트', () => {
-  test('로그인하지 않은 상태에서 추가 버튼 클릭 시 경고하는 alert가 호출되는지 확인', () => {
-    render(<CartPage />);
+describe('MSW 모킹 테스트', () => {
+  test('MSW 상세 데이터 모킹', async () => {
+    render(<Home />);
 
-    const alertSpy = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const postItem = await screen.findByText('1: 첫 번째 게시글');
 
-    const plusBtn = screen.getByText('추가');
-    fireEvent.click(plusBtn);
-
-    expect(alertSpy).toHaveBeenCalled();
-
-    alertSpy.mockRestore();
-  });
-
-  test('로그인 후 추가 버튼 클릭 시 count 증가되는지 확인', () => {
-    render(<CartPage />);
-
-    // const { count } = useCounterStore();
-
-    const loginBtn = screen.getByText('로그인');
-    fireEvent.click(loginBtn);
-
-    const plusBtn = screen.getByText('추가');
-    fireEvent.click(plusBtn);
-
-    // expect(count).toBe(1);
-    expect(screen.getByText('상품 개수: 1')).toBeInTheDocument();
-  });
-
-  test('상품이 0개일 때 제거 버튼 비활성화되는지 확인', () => {
-    render(<CartPage />);
-
-    const removeButton = screen.getByRole('button', { name: '제거' });
-    expect(removeButton).toBeDisabled();
-  });
-
-  test('상품 추가(로그인된 상태) 후 제거 시 count 감소', () => {
-    render(<CartPage />);
-
-    const loginButton = screen.getByRole('button', { name: '로그인' });
-    fireEvent.click(loginButton);
-    expect(screen.getByText('로그인됨: user@example.com')).toBeInTheDocument();
-
-    const addButton = screen.getByRole('button', { name: '추가' });
-    fireEvent.click(addButton);
-    fireEvent.click(addButton);
-
-    const removeButton = screen.getByRole('button', { name: '제거' });
-    fireEvent.click(removeButton);
-
-    expect(screen.getByText('상품 개수: 1')).toBeInTheDocument();
+    // MSW에서 설정한 결과값이 화면에 잘 나오는지 확인
+    expect(postItem).toBeInTheDocument();
   });
 });
