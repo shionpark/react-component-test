@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  # 작업명
+  quality-checks:
+    # 어디서
+    runs-on: ubuntu-latest
+    # 단계
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install dependencies
+        run: |
+          corepack enable
+          pnpm install
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run Jest tests
+        run: pnpm test -- --runInBand
+
+      - name: Type check
+        run: pnpm exec tsc --noEmit --skipLibCheck
