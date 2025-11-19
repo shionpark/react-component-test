@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState } from 'react';
 
-interface AuthContextType {
+export interface AuthContextType {
   isAuthenticated: boolean;
   login: () => void;
   logout: () => void;
